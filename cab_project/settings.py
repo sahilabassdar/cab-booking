@@ -4,7 +4,11 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-4@xxz)xqm!lrk+=+f&uiro&!9i!aaye0c29r#$d(+4_4+7fmge'
+# Secret key is taken from environment variable on Render
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'dev-only-secret-key'
+)
 
 DEBUG = False
 
