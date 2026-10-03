@@ -22,17 +22,29 @@ def register(request):
 
 # ---------------- LOGIN ----------------
 def user_login(request):
+    error = ""
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
 
         if user is not None:
             login(request, user)
             return redirect('home')
+        else:
+            error = "Invalid username or password"
 
-    return render(request, 'cabapp/login.html')
+    return render(
+        request,
+        'cabapp/login.html',
+        {'error': error}
+    )
 
 
 # ---------------- LOGOUT ----------------
@@ -53,12 +65,16 @@ def home(request):
 
         if form.is_valid():
             booking = form.save(commit=False)
-            booking.user = request.user   # ✅ IMPORTANT
+            booking.user = request.user
             booking.status = 'Pending'
             booking.save()
-            return redirect('my_bookings')  # better flow
+            return redirect('my_bookings')
 
-    return render(request, 'cabapp/home.html', {'form': form})
+    return render(
+        request,
+        'cabapp/home.html',
+        {'form': form}
+    )
 
 
 # ---------------- DRIVER LOGIN ----------------
@@ -71,7 +87,10 @@ def driver_login(request):
             request.session['driver'] = True
             return redirect('driver_dashboard')
 
-    return render(request, 'cabapp/driver_login.html')
+    return render(
+        request,
+        'cabapp/driver_login.html'
+    )
 
 
 # ---------------- DRIVER DASHBOARD ----------------
@@ -81,22 +100,36 @@ def driver_dashboard(request):
 
     bookings = Booking.objects.all().order_by('-id')
 
-    return render(request, 'cabapp/driver_dashboard.html', {'bookings': bookings})
+    return render(
+        request,
+        'cabapp/driver_dashboard.html',
+        {'bookings': bookings}
+    )
 
 
 # ---------------- ACCEPT BOOKING ----------------
 def accept_booking(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id)
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id
+    )
+
     booking.status = 'Assigned'
     booking.save()
+
     return redirect('driver_dashboard')
 
 
 # ---------------- REJECT BOOKING ----------------
 def reject_booking(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id)
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id
+    )
+
     booking.status = 'Rejected'
     booking.save()
+
     return redirect('driver_dashboard')
 
 
@@ -105,6 +138,12 @@ def my_bookings(request):
     if not request.user.is_authenticated:
         return redirect('login')
 
-    bookings = Booking.objects.filter(user=request.user).order_by('-id')
+    bookings = Booking.objects.filter(
+        user=request.user
+    ).order_by('-id')
 
-    return render(request, 'cabapp/my_bookings.html', {'bookings': bookings})
+    return render(
+        request,
+        'cabapp/my_bookings.html',
+        {'bookings': bookings}
+    )
