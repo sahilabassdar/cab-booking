@@ -63,6 +63,44 @@
             margin:20px 0;
         }
 
+        .booking-status{
+            margin-top:30px;
+        }
+
+        .booking{
+            border:1px solid #ddd;
+            padding:15px;
+            margin-top:15px;
+            border-radius:10px;
+            background:#f9f9f9;
+        }
+
+        .status{
+            font-weight:bold;
+            font-size:18px;
+        }
+
+        .pending{
+            color:#d89b00;
+        }
+
+        .assigned{
+            color:green;
+        }
+
+        .rejected{
+            color:red;
+        }
+
+        .my-bookings{
+            display:block;
+            text-align:center;
+            margin-top:20px;
+            color:#007bff;
+            text-decoration:none;
+            font-weight:bold;
+        }
+
     </style>
 </head>
 
@@ -75,6 +113,7 @@
     <div class="welcome">
 
         {% if request.user.is_authenticated %}
+
             <div>
                 Welcome, <b>{{ request.user.username }}</b>
             </div>
@@ -82,18 +121,20 @@
             <a href="/logout/" class="logout">Logout</a>
 
         {% else %}
+
             <div>
                 Welcome, Guest
             </div>
 
             <a href="/login/" class="logout">Login</a>
+
         {% endif %}
 
     </div>
 
     <hr>
 
-    <!-- BOOKING FORM (DO NOT REMOVE THIS) -->
+    <!-- BOOKING FORM -->
     <form method="post">
 
         {% csrf_token %}
@@ -105,6 +146,67 @@
         </button>
 
     </form>
+
+
+    <!-- CURRENT BOOKING STATUS -->
+
+    {% if bookings %}
+
+        <div class="booking-status">
+
+            <h2>🚕 Your Cab Booking Status</h2>
+
+            {% for booking in bookings %}
+
+                <div class="booking">
+
+                    <p>
+                        <b>Pickup:</b> {{ booking.pickup }}
+                    </p>
+
+                    <p>
+                        <b>Drop:</b> {{ booking.drop }}
+                    </p>
+
+                    <p>
+                        <b>Date:</b> {{ booking.date }}
+                    </p>
+
+                    <p class="status
+                        {% if booking.status == 'Pending' %}
+                            pending
+                        {% elif booking.status == 'Assigned' %}
+                            assigned
+                        {% elif booking.status == 'Rejected' %}
+                            rejected
+                        {% endif %}
+                    ">
+
+                        Status:
+                        {% if booking.status == 'Pending' %}
+                            🟡 Pending
+                        {% elif booking.status == 'Assigned' %}
+                            🟢 Assigned
+                        {% elif booking.status == 'Rejected' %}
+                            🔴 Rejected
+                        {% else %}
+                            {{ booking.status }}
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+
+    <a href="/my-bookings/" class="my-bookings">
+        View All My Bookings
+    </a>
 
 </div>
 

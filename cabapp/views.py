@@ -14,10 +14,15 @@ def register(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
             return redirect('login')
+
     else:
         form = RegisterForm()
 
-    return render(request, 'cabapp/register.html', {'form': form})
+    return render(
+        request,
+        'cabapp/register.html',
+        {'form': form}
+    )
 
 
 # ---------------- LOGIN ----------------
@@ -68,12 +73,20 @@ def home(request):
             booking.user = request.user
             booking.status = 'Pending'
             booking.save()
-            return redirect('my_bookings')
+
+            return redirect('home')
+
+    bookings = Booking.objects.filter(
+        user=request.user
+    ).order_by('-id')
 
     return render(
         request,
         'cabapp/home.html',
-        {'form': form}
+        {
+            'form': form,
+            'bookings': bookings
+        }
     )
 
 
@@ -127,7 +140,20 @@ def reject_booking(request, booking_id):
         id=booking_id
     )
 
-    booking.status = 'Rejected'
+    booking.status = 'Cancelled'
+    booking.save()
+
+    return redirect('driver_dashboard')
+
+
+# ---------------- DROP / REACHED DESTINATION ----------------
+def drop_booking(request, booking_id):
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id
+    )
+
+    booking.status = 'Reached Destination'
     booking.save()
 
     return redirect('driver_dashboard')

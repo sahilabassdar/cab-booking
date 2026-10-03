@@ -1,6 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Driver Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px gray;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .accept {
+            color: green;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .reject {
+            color: red;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .drop {
+            color: #0066cc;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
 <h1>🚖 Driver Dashboard</h1>
 
-<table border="1" cellpadding="10">
+<table>
+
     <tr>
         <th>Customer</th>
         <th>Phone</th>
@@ -12,17 +75,87 @@
     </tr>
 
     {% for b in bookings %}
+
     <tr>
-        <td>{{ b.customer_name }}</td>
+
+        <td>{{ b.name }}</td>
+
         <td>{{ b.phone }}</td>
+
         <td>{{ b.pickup }}</td>
+
         <td>{{ b.drop }}</td>
+
         <td>{{ b.date }}</td>
-        <td>{{ b.status }}</td>
+
+        <td class="status">
+
+            {% if b.status == "Pending" %}
+                🟡 Pending
+
+            {% elif b.status == "Assigned" %}
+                🟢 Assigned
+
+            {% elif b.status == "Reached Destination" %}
+                🔵 Reached Destination
+
+            {% elif b.status == "Cancelled" %}
+                🔴 Cancelled
+
+            {% else %}
+                {{ b.status }}
+            {% endif %}
+
+        </td>
+
         <td>
-            <a href="{% url 'accept_booking' b.id %}">✔ Accept</a> |
-            <a href="{% url 'reject_booking' b.id %}">❌ Reject</a>
+
+            {% if b.status == "Pending" %}
+
+                <a href="{% url 'accept_booking' b.id %}"
+                   class="accept">
+                    ✔ Accept
+                </a>
+
+                |
+
+                <a href="{% url 'reject_booking' b.id %}"
+                   class="reject">
+                    ❌ Reject
+                </a>
+
+            {% elif b.status == "Assigned" %}
+
+                <a href="{% url 'drop_booking' b.id %}"
+                   class="drop">
+                    🚕 Drop / Reached Destination
+                </a>
+
+            {% elif b.status == "Reached Destination" %}
+
+                ✅ Trip Completed
+
+            {% elif b.status == "Cancelled" %}
+
+                ❌ Cancelled
+
+            {% endif %}
+
+        </td>
+
+    </tr>
+
+    {% empty %}
+
+    <tr>
+        <td colspan="7">
+            No bookings available.
         </td>
     </tr>
+
     {% endfor %}
+
 </table>
+
+</body>
+</html>

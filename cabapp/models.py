@@ -31,7 +31,11 @@ class Driver(models.Model):
         ('Busy', 'Busy'),
     ]
 
-    status = models.CharField(max_length=20, choices=STATUS, default='Available')
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS,
+        default='Available'
+    )
 
     def __str__(self):
         return self.name
@@ -39,7 +43,10 @@ class Driver(models.Model):
 
 # ---------------- BOOKING MODEL ----------------
 class Booking(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
 
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
@@ -50,11 +57,15 @@ class Booking(models.Model):
     STATUS = [
         ('Pending', 'Pending'),
         ('Assigned', 'Assigned'),
-        ('Completed', 'Completed'),
+        ('Reached Destination', 'Reached Destination'),
         ('Cancelled', 'Cancelled'),
     ]
 
-    status = models.CharField(max_length=20, choices=STATUS, default='Pending')
+    status = models.CharField(
+        max_length=30,
+        choices=STATUS,
+        default='Pending'
+    )
 
     def __str__(self):
         return self.name
