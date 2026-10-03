@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Driver Login</title>
+    <title>Driver Registration</title>
 
     <style>
         body {
@@ -10,8 +10,8 @@
         }
 
         .container {
-            width: 400px;
-            margin: 80px auto;
+            width: 450px;
+            margin: 60px auto;
             background: white;
             padding: 30px;
             border-radius: 15px;
@@ -23,10 +23,10 @@
             color: #007bff;
         }
 
-        input {
+        input, select {
             width: 100%;
-            padding: 12px;
-            margin-top: 8px;
+            padding: 10px;
+            margin-top: 5px;
             margin-bottom: 15px;
             box-sizing: border-box;
         }
@@ -46,12 +46,12 @@
             background: #0056b3;
         }
 
-        .register {
+        .login {
             text-align: center;
             margin-top: 20px;
         }
 
-        .register a {
+        .login a {
             color: #007bff;
             text-decoration: none;
             font-weight: bold;
@@ -63,36 +63,24 @@
 
 <div class="container">
 
-    <h1>🚕 Driver Login</h1>
+    <h1>🚕 Driver Registration</h1>
 
     <form method="post">
 
         {% csrf_token %}
 
-        <label>Username</label>
-        <input
-            type="text"
-            name="username"
-            required
-        >
-
-        <label>Password</label>
-        <input
-            type="password"
-            name="password"
-            required
-        >
+        {{ form.as_p }}
 
         <button type="submit">
-            Login
+            Register as Driver
         </button>
 
     </form>
 
-    <div class="register">
-        New Driver?
-        <a href="{% url 'driver_register' %}">
-            Register Here
+    <div class="login">
+        Already have an account?
+        <a href="{% url 'driver_login' %}">
+            Driver Login
         </a>
     </div>
 
