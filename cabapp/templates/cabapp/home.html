@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Cab Booking System</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            background:#f4f4f4;
+        }
+
+        .container{
+            width:600px;
+            margin:50px auto;
+            background:white;
+            padding:30px;
+            border-radius:15px;
+            box-shadow:0px 0px 10px gray;
+        }
+
+        h1{
+            text-align:center;
+            color:#007bff;
+        }
+
+        .welcome{
+            font-size:18px;
+            margin-bottom:15px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .logout{
+            background:red;
+            color:white;
+            padding:10px 20px;
+            text-decoration:none;
+            border-radius:5px;
+        }
+
+        .logout:hover{
+            background:darkred;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            background:#007bff;
+            color:white;
+            border:none;
+            border-radius:5px;
+            font-size:16px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#0056b3;
+        }
+
+        hr{
+            margin:20px 0;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🚖 Online Cab Booking</h1>
+
+    <div class="welcome">
+
+        {% if request.user.is_authenticated %}
+            <div>
+                Welcome, <b>{{ request.user.username }}</b>
+            </div>
+
+            <a href="/logout/" class="logout">Logout</a>
+
+        {% else %}
+            <div>
+                Welcome, Guest
+            </div>
+
+            <a href="/login/" class="logout">Login</a>
+        {% endif %}
+
+    </div>
+
+    <hr>
+
+    <!-- BOOKING FORM (DO NOT REMOVE THIS) -->
+    <form method="post">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Book Cab
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

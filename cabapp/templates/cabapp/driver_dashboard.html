@@ -1,0 +1,28 @@
+<h1>🚖 Driver Dashboard</h1>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Customer</th>
+        <th>Phone</th>
+        <th>Pickup</th>
+        <th>Drop</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    {% for b in bookings %}
+    <tr>
+        <td>{{ b.customer_name }}</td>
+        <td>{{ b.phone }}</td>
+        <td>{{ b.pickup }}</td>
+        <td>{{ b.drop }}</td>
+        <td>{{ b.date }}</td>
+        <td>{{ b.status }}</td>
+        <td>
+            <a href="{% url 'accept_booking' b.id %}">✔ Accept</a> |
+            <a href="{% url 'reject_booking' b.id %}">❌ Reject</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>

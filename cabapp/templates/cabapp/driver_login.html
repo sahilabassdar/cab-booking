@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Driver Login</title>
+
+<style>
+body{
+    font-family:Arial;
+    background:linear-gradient(to right,#ff9800,#ff5722);
+}
+
+.box{
+    width:400px;
+    background:white;
+    margin:100px auto;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 15px gray;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+}
+
+button{
+    width:100%;
+    padding:10px;
+    background:#ff5722;
+    color:white;
+    border:none;
+}
+
+a{
+    text-decoration:none;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>🚖 Driver Login</h1>
+
+<form method="post">
+{% csrf_token %}
+
+<input type="text"
+       name="username"
+       placeholder="Driver Username">
+
+<input type="password"
+       name="password"
+       placeholder="Password">
+
+<button type="submit">
+Login
+</button>
+
+</form>
+
+<p align="center">
+New Driver?
+<a href="/admin/">
+Register Here
+</a>
+</p>
+
+<p align="center">
+Username: <b>driver</b><br>
+Password: <b>driver123</b>
+</p>
+
+</div>
+
+</body>
+</html>

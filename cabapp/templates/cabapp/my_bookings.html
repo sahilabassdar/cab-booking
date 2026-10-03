@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Bookings</title>
+
+    <style>
+        body{
+            font-family: Arial;
+            background:#f4f4f4;
+        }
+
+        .container{
+            width:700px;
+            margin:50px auto;
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0px 0px 10px gray;
+        }
+
+        h1{
+            text-align:center;
+            color:#007bff;
+        }
+
+        table{
+            width:100%;
+            border-collapse: collapse;
+            margin-top:20px;
+        }
+
+        th, td{
+            border:1px solid #ddd;
+            padding:10px;
+            text-align:center;
+        }
+
+        th{
+            background:#007bff;
+            color:white;
+        }
+
+        .back{
+            display:inline-block;
+            margin-top:10px;
+            text-decoration:none;
+            background:green;
+            color:white;
+            padding:8px 15px;
+            border-radius:5px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🚖 My Cab Bookings</h1>
+
+    <a href="/" class="back">⬅ Back to Home</a>
+
+    <table>
+        <tr>
+            <th>Pickup</th>
+            <th>Drop</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+
+        {% for b in bookings %}
+        <tr>
+            <td>{{ b.pickup }}</td>
+            <td>{{ b.drop }}</td>
+            <td>{{ b.date }}</td>
+
+            <td>
+                {% if b.status == "Pending" %}
+                    🟡 Pending
+                {% elif b.status == "Assigned" %}
+                    🟢 Verified
+                {% elif b.status == "Rejected" %}
+                    🔴 Rejected
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+</body>
+</html>

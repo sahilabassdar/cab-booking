@@ -1,0 +1,110 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
+from .forms import RegisterForm, BookingForm
+from .models import Booking
+
+
+# ---------------- REGISTER ----------------
+def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            return redirect('login')
+    else:
+        form = RegisterForm()
+
+    return render(request, 'cabapp/register.html', {'form': form})
+
+
+# ---------------- LOGIN ----------------
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+
+    return render(request, 'cabapp/login.html')
+
+
+# ---------------- LOGOUT ----------------
+def user_logout(request):
+    logout(request)
+    return redirect('login')
+
+
+# ---------------- HOME (BOOK CAB) ----------------
+def home(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    form = BookingForm()
+
+    if request.method == 'POST':
+        form = BookingForm(request.POST)
+
+        if form.is_valid():
+            booking = form.save(commit=False)
+            booking.user = request.user   # ✅ IMPORTANT
+            booking.status = 'Pending'
+            booking.save()
+            return redirect('my_bookings')  # better flow
+
+    return render(request, 'cabapp/home.html', {'form': form})
+
+
+# ---------------- DRIVER LOGIN ----------------
+def driver_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        if username == "driver" and password == "driver123":
+            request.session['driver'] = True
+            return redirect('driver_dashboard')
+
+    return render(request, 'cabapp/driver_login.html')
+
+
+# ---------------- DRIVER DASHBOARD ----------------
+def driver_dashboard(request):
+    if not request.session.get('driver'):
+        return redirect('driver_login')
+
+    bookings = Booking.objects.all().order_by('-id')
+
+    return render(request, 'cabapp/driver_dashboard.html', {'bookings': bookings})
+
+
+# ---------------- ACCEPT BOOKING ----------------
+def accept_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    booking.status = 'Assigned'
+    booking.save()
+    return redirect('driver_dashboard')
+
+
+# ---------------- REJECT BOOKING ----------------
+def reject_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    booking.status = 'Rejected'
+    booking.save()
+    return redirect('driver_dashboard')
+
+
+# ---------------- USER BOOKING STATUS ----------------
+def my_bookings(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    bookings = Booking.objects.filter(user=request.user).order_by('-id')
+
+    return render(request, 'cabapp/my_bookings.html', {'bookings': bookings})
