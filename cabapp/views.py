@@ -92,13 +92,29 @@ def home(request):
 
 # ---------------- DRIVER LOGIN ----------------
 def driver_login(request):
+
     if request.method == 'POST':
+
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        if username == "driver" and password == "driver123":
-            request.session['driver'] = True
-            return redirect('driver_dashboard')
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
+
+        if user is not None:
+
+            try:
+                driver = Driver.objects.get(user=user)
+
+                request.session['driver'] = driver.id
+
+                return redirect('driver_dashboard')
+
+            except Driver.DoesNotExist:
+                pass
 
     return render(
         request,

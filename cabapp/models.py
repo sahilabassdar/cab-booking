@@ -14,6 +14,14 @@ class Car(models.Model):
 
 # ---------------- DRIVER MODEL ----------------
 class Driver(models.Model):
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
 
@@ -23,7 +31,11 @@ class Driver(models.Model):
         ('Hatchback', 'Hatchback'),
     ]
 
-    car_type = models.CharField(max_length=20, choices=CAR_TYPES)
+    car_type = models.CharField(
+        max_length=20,
+        choices=CAR_TYPES
+    )
+
     vehicle_number = models.CharField(max_length=20)
 
     STATUS = [
@@ -43,6 +55,7 @@ class Driver(models.Model):
 
 # ---------------- BOOKING MODEL ----------------
 class Booking(models.Model):
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE
